@@ -12,6 +12,7 @@ const Logout = React.lazy(() => import('../pages/auth/Logout'));
 const Register = React.lazy(() => import('../pages/auth/Register'));
 const ForgetPassword = React.lazy(() => import('../pages/auth/ForgetPassword'));
 const Confirm = React.lazy(() => import('../pages/auth/Confirm'));
+const Resetpassword = React.lazy(() => import("../pages/auth/PasswordUpdate"));
 
 //Hashroot Invoice
 const HashrootpInvoice = React.lazy(() => import('../pages/HashrootpInvoice/index'));
@@ -129,7 +130,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
 
             const loggedInUser = getLoggedInUser();
             // check if route is restricted by role
-            if (roles && roles.indexOf(loggedInUser.role) === 1) {
+            if (roles && roles.indexOf(loggedInUser.role) === -1) {
                 // role not authorised so redirect to home page
                 return <Redirect to={{ pathname: '/' }} />;
             }
@@ -144,7 +145,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
 const rootRoute = {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/hashroot/invoice" />,
+    component: () => <Redirect to="/dashboard" />,
     route: PrivateRoute,
 };
 
@@ -190,6 +191,7 @@ const dashboardRoutes = {
 const hashrootpRoutes = {
     path: '/hashrootp',
     name: 'Hashroot-P',
+    role_number: [ 1, 2, 3],
     exact: true,
     icon: 'uil-home-alt',
     header: 'Navigation',
@@ -200,12 +202,16 @@ const hashrootpRoutes = {
             component: HashrootpInvoice,
             exact: true,
             route: PrivateRoute,
+            role_number: [ 1, 2, 3],
+
         },
         {
             path: '/hashrootp/bills',
             name: 'Bills',
             component: HashrootpBill,
             route: PrivateRoute,
+            role_number: [ 1, 2, 3],
+
         },
     ],
 };
@@ -215,6 +221,7 @@ const hashrootssRoutes = {
     path: '/sshashroot',
     name: 'Hashroot-SS',
     exact: true,
+    role_number: [0, 1, 2, 3, 4],
     icon: 'uil-home-alt',
     header: 'Navigation',
     children: [
@@ -224,6 +231,8 @@ const hashrootssRoutes = {
             component: HashrootssInvoice,
             exact: true,
             route: PrivateRoute,
+            role_number: [0, 1, 2, 3, 4],
+
         },
         {
             path: '/sshashroot/bills',
@@ -231,15 +240,44 @@ const hashrootssRoutes = {
             exact: true,
             component: HashrootssBill,
             route: PrivateRoute,
+            role_number: [0, 1, 2, 3, 4],
+
         },
     ],
 };
+// Hashroot
+const hashrootRoutes = {
+    path: '/hasroot',
+    name: 'Hashroot',
+    icon: 'uil-home-alt',
+    role_number: [0, 1, 2, 3],
+    exact: true,
+    header: 'Navigation',
+    children: [
+        {
+            path: '/hashroot/invoice',
+            name: 'Invoice',
+            component: HashrootInvoice,
+            route: PrivateRoute,
+            role_number: [0, 1, 2, 3],
 
+        },
+        {
+            path: '/hashroot/bills',
+            name: 'Bills',
+            component: HashrootBill,
+            route: PrivateRoute,
+            role_number: [0, 1, 2, 3],
+
+        },
+    ],
+};
 // Hashroot - s
 const hashrootsRoutes = {
     path: '/hashroots',
     name: 'Hashroot-S',
     exact: true,
+    role_number: [0, 1, 2, 3],
     icon: 'uil-home-alt',
     header: 'Navigation',
     children: [
@@ -249,6 +287,8 @@ const hashrootsRoutes = {
             component: HashrootsInvoice,
             exact: true,
             route: PrivateRoute,
+            role_number: [0, 1, 2, 3],
+
         },
         {
             path: '/hashroots/bills',
@@ -256,34 +296,15 @@ const hashrootsRoutes = {
             exact: true,
             component: HashrootsBill,
             route: PrivateRoute,
+            role_number: [0, 1, 2, 3],
+
         },
     ],
 };
 
 
 
-// Hashroot
-const hashrootRoutes = {
-    path: '/hasroot',
-    name: 'Hashroot',
-    icon: 'uil-home-alt',
-    exact: true,
-    header: 'Navigation',
-    children: [
-        {
-            path: '/hashroot/invoice',
-            name: 'Invoice',
-            component: HashrootInvoice,
-            route: PrivateRoute,
-        },
-        {
-            path: '/hashroot/bills',
-            name: 'Bills',
-            component: HashrootBill,
-            route: PrivateRoute,
-        },
-    ],
-};
+
 
 const myProfileRoutes = {
     path: '/myProfile',
@@ -459,7 +480,7 @@ const taskAppRoutes = {
     ],
 };
 
-const appRoutes = [hashrootRoutes, hashrootpRoutes, hashrootsRoutes,hashrootssRoutes];
+const appRoutes = [ hashrootpRoutes, hashrootsRoutes,hashrootRoutes,hashrootssRoutes];
 
 // pages
 const pageRoutes = {
@@ -554,6 +575,12 @@ const authRoutes = {
             component: ForgetPassword,
             route: Route,
         },
+         {
+            path: "/password-reset/:id",
+            name: "Reset Password",
+            component: Resetpassword,
+            route: Route,
+          }
     ],
 };
 

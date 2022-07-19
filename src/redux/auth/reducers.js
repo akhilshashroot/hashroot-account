@@ -22,6 +22,9 @@ import {
     UPDATE_PROFILE,
     UPDATE_PROFILE_SUCCESS,
     UPDATE_PROFILE_FAILED,
+    RESET_PASSWORD,
+    RESET_PASSWORD_SUCCESS,
+    RESET_PASSWORD_FAILED,
 } from './constants';
 
 import { getLoggedInUser } from '../../helpers/authUtils';
@@ -55,6 +58,12 @@ const Auth = (state: State = INIT_STATE, action: AuthAction) => {
         case FORGET_PASSWORD_SUCCESS:
             return { ...state, passwordResetStatus: action.payload, loading: false, error: null };
         case FORGET_PASSWORD_FAILED:
+            return { ...state, error: action.payload, loading: false };
+        case RESET_PASSWORD:
+            return { ...state, loading: true };
+        case RESET_PASSWORD_SUCCESS:
+            return { ...state, ResetStatus: action.payload, loading: false, error: null };
+        case RESET_PASSWORD_FAILED:
             return { ...state, error: action.payload, loading: false };
         case COUNTRIES_LIST:
             return { ...state, listloading: true };

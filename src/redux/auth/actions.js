@@ -22,6 +22,9 @@ import {
     UPDATE_PROFILE,
     UPDATE_PROFILE_SUCCESS,
     UPDATE_PROFILE_FAILED,
+    RESET_PASSWORD,
+    RESET_PASSWORD_SUCCESS,
+    RESET_PASSWORD_FAILED,
 } from './constants';
 
 type AuthAction = { type: string, payload: {} | string };
@@ -61,9 +64,9 @@ export const logoutUser = (history: any): AuthAction => ({
     payload: { history },
 });
 
-export const forgetPassword = (username: string): AuthAction => ({
+export const forgetPassword = (data): AuthAction => ({
     type: FORGET_PASSWORD,
-    payload: { username },
+    payload: data,
 });
 
 export const forgetPasswordSuccess = (passwordResetStatus: string): AuthAction => ({
@@ -75,7 +78,6 @@ export const forgetPasswordFailed = (error: string): AuthAction => ({
     type: FORGET_PASSWORD_FAILED,
     payload: error,
 });
-
 
 export const getCountries = () => ({
     type: COUNTRIES_LIST,
@@ -135,5 +137,19 @@ export const updateProfileSuccess = (profile) => ({
 
 export const updateProfileFailed = (error) => ({
     type: UPDATE_PROFILE_FAILED,
+    payload: error,
+});
+export const resetPassword = (data): AuthAction => ({
+    type: RESET_PASSWORD,
+    payload: data,
+});
+
+export const resetPasswordSuccess = (ResetStatus: string): AuthAction => ({
+    type: RESET_PASSWORD_SUCCESS,
+    payload: ResetStatus,
+});
+
+export const resetPasswordFailed = (error: string): AuthAction => ({
+    type: RESET_PASSWORD_FAILED,
     payload: error,
 });

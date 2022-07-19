@@ -28,6 +28,7 @@ class ProfileDropdown extends Component<ProfileDropdownProps, ProfileDropdownSta
         this.state = {
             dropdownOpen: false,
         };
+        console.log(this.props.userTitle);
     }
 
     /*:: toggleDropdown: () => void */

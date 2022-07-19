@@ -15,6 +15,7 @@ import { showRightSidebar ,getCountries,getPayment,getHSN} from '../redux/action
 import profilePic from '../assets/images/avatar.png';
 import logoSm from '../assets/images/logo_sm.png';
 import logo from '../assets/images/logo-light.png';
+import { getLoggedInUser } from '../helpers/authUtils';
 
 // const Notifications = [
 //     {
@@ -164,9 +165,11 @@ class Topbar extends Component<TopbarProps> {
     };
 
     render() {
+        const user = getLoggedInUser();
         const hideLogo = this.props.hideLogo || false;
         const navCssClasses = this.props.navCssClasses || '';
         const containerCssClasses = !hideLogo ? 'container-fluid' : '';
+       // console.log(user)
         return (
             <React.Fragment>
                 <div className={`navbar-custom ${navCssClasses}`}>
@@ -206,8 +209,8 @@ class Topbar extends Component<TopbarProps> {
                                 <ProfileDropdown
                                     profilePic={profilePic}
                                     menuItems={ProfileMenus}
-                                    username={'Anees T'}
-                                    userTitle={'Founder'}
+                                    username={user.data.username}
+                                    userTitle={'Admin'}
                                 />
                             </li>
                         </ul>

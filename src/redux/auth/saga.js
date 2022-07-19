@@ -16,6 +16,7 @@ import {
     HSN_LIST,
     PAYMENT_LIST,
     UPDATE_PROFILE,
+    RESET_PASSWORD
 } from './constants';
 
 import {
@@ -137,18 +138,26 @@ function* register({ payload: { fullname, email, password } }) {
 /**
  * forget password
  */
-function* forgetPassword({ payload: { username } }) {
+ function* forgetPassword({ payload: data }) {
     const options = {
-        body: JSON.stringify({ username }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        url: endpoints.forgetPassword,
+        data: data,
     };
 
     try {
-        const response = yield call(fetchJSON, '/users/password-reset', options);
-        yield put(forgetPasswordSuccess(response.message));
+        const response = yield call(ApiCall, options);
+        if (response.data.error) {
+            yield put(loginUserFailed('Invalid Credentials.'));
+        } else {
+            yield put(forgetPasswordSuccess(response.data.message));
+        }
     } catch (error) {
         let message;
+     //   console.log(error);
         switch (error.status) {
             case 500:
                 message = 'Internal Server Error';
@@ -298,6 +307,46 @@ function* HSNList() {
         yield put(getHSNFailed(message));
     }
 }
+/**
+ * reset password
+ */
+ function* resetPassword({ payload: { password, confirm_password, id } }) {
+    let data = {
+        password,
+        confirm_password,
+    };
+    const options = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: endpoints.resetPassword + '/' + id,
+        data: data,
+    };
+
+    try {
+        const response = yield call(ApiCall, options);
+        console.log(response);
+        if (response.data.error) {
+            yield put(loginUserFailed('Invalid Credentials.'));
+        } else {
+            yield put(forgetPasswordSuccess(response.data.message));
+        }
+    } catch (error) {
+        let message;
+        switch (error.status) {
+            case 500:
+                message = 'Internal Server Error';
+                break;
+            case 401:
+                message = 'Invalid credentials';
+                break;
+            default:
+                message = error;
+        }
+        yield put(forgetPasswordFailed(message));
+    }
+}
 
 //Update Profile
 function* updateProfile({ payload: data }) {
@@ -378,6 +427,9 @@ export function* watchHSNList(): any {
 export function* watchUpdateProfile(): any {
     yield takeEvery(UPDATE_PROFILE, updateProfile);
 }
+export function* watchResetPassword(): any {
+    yield takeEvery(RESET_PASSWORD, resetPassword);
+}
 
 function* authSaga(): any {
     yield all([
@@ -389,6 +441,8 @@ function* authSaga(): any {
         fork(watchPaymentList),
         fork(watchHSNList),
         fork(watchUpdateProfile),
+        fork(watchResetPassword),
+
     ]);
 }
 

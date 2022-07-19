@@ -5,58 +5,70 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import MetisMenu from 'metismenujs/dist/metismenujs';
+import {isUserAuthenticated, getLoggedInUser} from '../helpers/authUtils';
 
 import { initMenu, changeActiveMenuFromLocation } from '../redux/actions';
 
 const MenuItemWithChildren = ({ item, linkClassNames, subMenuClassNames, activatedMenuItemIds }) => {
-    return (
-        <li
-            className={classNames('side-nav-item', {
-                'mm-active': activatedMenuItemIds.indexOf(item.id) >= 0,
-                active: activatedMenuItemIds.indexOf(item.id) >= 0,
-            })}>
-            <Link
-                to="#"
-                className={classNames('has-arrow', 'side-sub-nav-link', linkClassNames)}
-                aria-expanded={activatedMenuItemIds.indexOf(item.id) >= 0}>
-                {item.icon && <i className={item.icon}></i>}
-                {item.badge && (
-                    <span className={`badge badge-${item.badge.variant} float-right`}>{item.badge.text}</span>
-                )}
-                <span> {item.name} </span>
-            </Link>
+  let Childmenu = item.children
+      
+if (isUserAuthenticated() ) {            
+    Childmenu = item.children.filter((t) => t.role_number.includes(getLoggedInUser().data.role));   
+}
 
-            <ul
-                className={classNames(subMenuClassNames, 'mm-collapse', {
-                    'mm-collapsed mm-show': activatedMenuItemIds.indexOf(item.id) >= 0,
-                })}
-                aria-expanded={activatedMenuItemIds.indexOf(item.id) >= 0}>
-                {item.children.map((child, i) => {
-                    return (
-                        <React.Fragment key={i}>
-                            {child.children ? (
-                                <MenuItemWithChildren
-                                    item={child}
-                                    linkClassNames=""
-                                    activatedMenuItemIds={activatedMenuItemIds}
-                                    subMenuClassNames="side-nav-third-level"
-                                />
-                            ) : (
-                                <MenuItem
-                                    item={child}
-                                    className={classNames({ 'mm-active': activatedMenuItemIds.indexOf(child.id) >= 0 })}
-                                    linkClassName=""
-                                />
-                            )}
-                        </React.Fragment>
-                    );
-                })}
-            </ul>
-        </li>
-    );
-};
+  console.log( Childmenu.length );
+  
+    return (
+    
+            <li
+                className={classNames('side-nav-item', {
+                    'mm-active': activatedMenuItemIds.indexOf(item.id) >= 0,
+                    active: activatedMenuItemIds.indexOf(item.id) >= 0,
+                })}>
+                <Link
+                    to="#"
+                    className={classNames('has-arrow', 'side-sub-nav-link', linkClassNames)}
+                    aria-expanded={activatedMenuItemIds.indexOf(item.id) >= 0}>
+                    {item.icon && <i className={item.icon}></i>}
+                    {item.badge && (
+                        <span className={`badge badge-${item.badge.variant} float-right`}>{item.badge.text}</span>
+                    )}
+                    <span> {item.name} </span>
+                </Link>
+    
+                <ul
+                    className={classNames(subMenuClassNames, 'mm-collapse', {
+                        'mm-collapsed mm-show': activatedMenuItemIds.indexOf(item.id) >= 0,
+                    })}
+                    aria-expanded={activatedMenuItemIds.indexOf(item.id) >= 0}>
+                    {Childmenu && Childmenu.length>0 ? Childmenu.map((child, i) => {
+                        return (
+                            <React.Fragment key={i}>
+                                {child.children ? (
+                                    <MenuItemWithChildren
+                                        item={child}
+                                        linkClassNames=""
+                                        activatedMenuItemIds={activatedMenuItemIds}
+                                        subMenuClassNames="side-nav-third-level"
+                                    />
+                                ) : (
+                                    <MenuItem
+                                        item={child}
+                                        className={classNames({ 'mm-active': activatedMenuItemIds.indexOf(child.id) >= 0 })}
+                                        linkClassName=""
+                                    />
+                                )}
+                            </React.Fragment>
+                        );
+                    }) : null}
+                </ul>
+            </li>
+        );
+    };
+    
 
 const MenuItem = ({ item, className, linkClassName }) => {
+
     return (
         <li className={classNames('side-nav-item', className)}>
             <MenuItemLink item={item} className={linkClassName} />
@@ -73,6 +85,7 @@ const MenuItemLink = ({ item, className }) => {
         </Link>
     );
 };
+
 
 /**
  * Renders the application menu
@@ -113,6 +126,10 @@ class AppMenu extends Component<Props> {
     };
 
     componentDidUpdate = prevProps => {
+  
+    
+
+
         if (
             !prevProps.menu.menuItems ||
             (prevProps.menu.menuItems && prevProps.menu.menuItems !== this.props.menu.menuItems)
@@ -157,6 +174,7 @@ class AppMenu extends Component<Props> {
          * Horizontal layout - We are controlling how many menu items can be displayed in it
          */
         let menuItems = this.props.menu && this.props.menu.menuItems ? this.props.menu.menuItems : [];
+     
         const defaultDisplayedItems = window.screen.width > 1366 ? 7 : 5;
 
         if (isHorizontal && menuItems.length > defaultDisplayedItems) {
@@ -170,13 +188,27 @@ class AppMenu extends Component<Props> {
             };
             menuItems = [...displayedItems, otherItems];
         }
+        let newMenuItems = menuItems
+      
+        if (isUserAuthenticated()) {   
+            
+            if(getLoggedInUser()){
+                 newMenuItems = menuItems.filter((t) => t.role_number.includes(getLoggedInUser().data.role));
+               
+            } else {
+                newMenuItems = menuItems.filter((t) => t.roles.includes(getLoggedInUser().role));   
+            }
+         //   console.log( newMenuItems.length );
+ 
+        }
 
         return (
             <React.Fragment>
                 <div className={classNames({ 'topbar-nav': isHorizontal })}>
                     {this.props.menu && menuItems && menuItems.length ? (
                         <ul className="metismenu side-nav" id="menu-bar">
-                            {menuItems.map((item, i) => {
+                            {newMenuItems.map((item, i) => {
+                             
                                 return (
                                     <React.Fragment key={item.id}>
                                         <React.Fragment>
@@ -186,7 +218,7 @@ class AppMenu extends Component<Props> {
                                                 </li>
                                             )}
 
-                                            {item.children ? (
+                                            {item.children  ? (
                                                 <MenuItemWithChildren
                                                     item={item}
                                                     subMenuClassNames="side-nav-second-level"

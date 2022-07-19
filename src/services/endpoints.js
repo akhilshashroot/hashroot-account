@@ -11,7 +11,8 @@ export const endpoints = {
   viewPayment: `${baseUrl}/api/admin/view_paymentmethods`,
   viewHSN : `${baseUrl}/api/admin/viewall_hsn`,
   updateProfile : `${baseUrl}/api/admin/settings`,
-
+  forgetPassword: `${baseUrl}/api/password/email`,
+  resetPassword: `${baseUrl}/api/reset-password`,
   //Hashroot
   viewHashrootInvoice : `${baseUrl}/api/admin/viewhrtinvoice`,
   addHashrootInvoice : `${baseUrl}/api/admin/add_new_invoice`,

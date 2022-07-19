@@ -1,8 +1,8 @@
 var url = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    url = "https://accountsnew.hashroot.org/server";
+    url = "http://account.localhost";
 } else {
-    url = "https://accountsnew.hashroot.org/server";
+    url = "http://account.localhost";
 }
 
 export const API_BASE_URL = url;

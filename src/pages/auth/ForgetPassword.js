@@ -14,37 +14,40 @@ class ForgetPassword extends Component {
     _isMounted = false;
 
     constructor(props) {
-        super(props);
-
-        this.handleValidSubmit = this.handleValidSubmit.bind(this);
-        this.state = {};
+      super(props);
+  
+      this.handleValidSubmit = this.handleValidSubmit.bind(this);
+      this.state = {};
     }
-
+  
     componentDidMount() {
-        this._isMounted = true;
+      this._isMounted = true;
     }
-
+  
     componentWillUnmount() {
-        this._isMounted = false;
+      this._isMounted = false;
     }
-
+  
     /**
      * Handles the submit
      */
     handleValidSubmit = (event, values) => {
-        this.props.forgetPassword(values.username);
+      let send = {
+        email: values.username,
+        site_url: window.location.origin.toString() + "/password-reset",
+      };
+      this.props.forgetPassword(send);
     };
-
+  
     /**
      * Redirect to root
      */
     renderRedirectToRoot = () => {
-        const isAuthTokenValid = isUserAuthenticated();
-        if (isAuthTokenValid) {
-            return <Redirect to="/" />;
-        }
+      const isAuthTokenValid = isUserAuthenticated();
+      if (isAuthTokenValid) {
+        return <Redirect to="/" />;
+      }
     };
-
     render() {
         const isAuthTokenValid = isUserAuthenticated();
         return (
@@ -58,11 +61,11 @@ class ForgetPassword extends Component {
                                 <Col lg={5}>
                                     <Card>
                                         <div className="card-header pt-4 pb-4 text-center bg-primary">
-                                            <Link to="/">
-                                                <span>
-                                                    <img src={logo} alt="" height="18" />
-                                                </span>
-                                            </Link>
+                                            {/* <Link to="/"> */}
+                                                <h4 style={{color:'#fff'}}>
+                                                  Hashroot Account Portal  {/* <img src={logo} alt="" height="18" /> */}
+                                                </h4>
+                                            {/* </Link> */}
                                         </div>
 
                                         <CardBody className="p-4 position-relative">
