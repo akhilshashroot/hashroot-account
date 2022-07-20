@@ -90,7 +90,7 @@ const HashrootBillConfig = (props) => {
                 </div>
             ),
         },
-        {
+        /*{
             dataField: 'address',
             text: 'Address',
             headerClasses: 'bg-dark text-white py-2',
@@ -101,7 +101,7 @@ const HashrootBillConfig = (props) => {
                     <p id="name">{row.address}</p>
                 </div>
             ),
-        },
+        },*/
         {
             dataField: 'country',
             text: 'Country',
@@ -114,7 +114,7 @@ const HashrootBillConfig = (props) => {
                 </div>
             ),
         },
-        {
+        /*{
             dataField: 'state',
             text: 'State',
             headerClasses: 'bg-dark text-white py-2',
@@ -125,7 +125,7 @@ const HashrootBillConfig = (props) => {
                     <p id="name">{row.state}</p>
                 </div>
             ),
-        },
+        },*/
         {
             dataField: 'bill_amt',
             text: 'Amount',
@@ -138,7 +138,7 @@ const HashrootBillConfig = (props) => {
                 </div>
             ),
         },
-        {
+        /*{
             dataField: 'gstin',
             text: 'GSTIN',
             headerClasses: 'bg-dark text-white py-2',
@@ -197,7 +197,7 @@ const HashrootBillConfig = (props) => {
                     <p id="name">{row.gst_void}</p>
                 </div>
             ),
-        },
+        },*/
 
         {
             dataField: 'actions',
