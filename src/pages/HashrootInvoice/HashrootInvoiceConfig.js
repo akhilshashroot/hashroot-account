@@ -19,6 +19,8 @@ import {
     getHashrootInvoiceAdd,
     getHashrootInvoiceUpdate,
     getHashrootInvoiceDelete,
+    getHashrootCloneInvoice,
+    downloadInvoice,
 } from '../../redux/actions';
 import LoaderWidget from '../../components/Loader';
 const { SearchBar } = Search;
@@ -37,7 +39,14 @@ const HashrootInvoiceConfig = (props) => {
     const [hashrootinvoiceData, setHashrootInvoiceData] = useState(null);
     const [index, setIndex] = useState(null);
 
-
+    const invoiceClone = (row, index) => {
+        let data = {
+            invoid: row.invoice_id,
+            table_name: 'hrt_invoice',
+        };
+      
+        props.getHashrootCloneInvoice(data);
+    };
     const columns = [
         {
             dataField: 'invo_number',
@@ -245,7 +254,7 @@ const HashrootInvoiceConfig = (props) => {
                         className="uil uil-trash-alt dept-trash widget-icon bg-danger-lighten text-danger"
                         id="delete"
                         onClick={() => deleteHashrootInvoice(row, rowIndex)}></i>
-                    <i className="uil  uil-copy-alt widget-icon ml-2" title='Clone Invoice'></i>
+                    <i className="uil  uil-copy-alt widget-icon ml-2" title='Clone Invoice'    onClick={() => invoiceClone(row, rowIndex)}></i>
                     <UncontrolledTooltip placement="top" target="edit">
                         Edit
                     </UncontrolledTooltip>
@@ -285,7 +294,8 @@ const HashrootInvoiceConfig = (props) => {
     }, []);
 
     const downloadInvoice = (row)=>{
-        window.open(API_BASE_URL + row.inv_uploaded, '_blank');
+        
+        window.open(row.inv_uploaded, '_blank');
     }
 
     const handleDetailsModal = (row) => {
@@ -450,4 +460,6 @@ export default connect(mapStateToProps, {
     getHashrootInvoiceAdd,
     getHashrootInvoiceUpdate,
     getHashrootInvoiceDelete,
+    getHashrootCloneInvoice,
+    downloadInvoice,
 })(HashrootInvoiceConfig);

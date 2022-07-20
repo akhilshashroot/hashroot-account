@@ -11,7 +11,13 @@ import {
     HASHROOTINVOICE_UPDATE_FAILED,
     HASHROOTINVOICE_DELETE,
     HASHROOTINVOICE_DELETE_SUCCESS,
-    HASHROOTINVOICE_DELETE_FAILED
+    HASHROOTINVOICE_DELETE_FAILED  ,
+    HASHROOTINVOICE_CLONE,
+    HASHROOTINVOICE_CLONE_SUCCESS,
+    HASHROOTINVOICE_CLONE_FAILED,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED
 } from './constants';
 
 type HashrootInvoiceAction = { type: string, payload: {} | string };
@@ -73,5 +79,35 @@ export const getHashrootInvoiceDeleteSuccess = (hashrootinvoiceDelete: string): 
 
 export const getHashrootInvoiceDeleteFailed = (error: string): HashrootInvoiceAction => ({
     type: HASHROOTINVOICE_DELETE_FAILED,
+    payload: error,
+});
+export const getHashrootCloneInvoice = (data:{}): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_CLONE,
+    payload: data,
+});
+
+export const getHashrootCloneInvoiceSuccess = (hashrootpCloneinvoice: string): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_CLONE_SUCCESS,
+    payload: hashrootpCloneinvoice,
+});
+
+export const getHashrootCloneInvoiceFailed = (error: string): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_CLONE_FAILED,
+    payload: error,
+});
+
+
+export const downloadInvoice = (data): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_DOWNLOAD_INVOICE,
+    payload: data,
+});
+
+export const downloadInvoiceSuccess = (downloadInvoice: string): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS,
+    payload: downloadInvoice,
+});
+
+export const downloadInvoiceFailed = (error: string): HashrootInvoiceAction => ({
+    type: HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED,
     payload: error,
 });

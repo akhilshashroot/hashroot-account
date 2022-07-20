@@ -7,7 +7,8 @@ import { ApiCall } from '../../services/index';
 import { endpoints } from '../../services/endpoints';
 import { toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { HASHROOTINVOICE_LIST, HASHROOTINVOICE_ADD, HASHROOTINVOICE_UPDATE, HASHROOTINVOICE_DELETE } from './constants';
+import { HASHROOTINVOICE_LIST, HASHROOTINVOICE_ADD, HASHROOTINVOICE_UPDATE, HASHROOTINVOICE_DELETE,HASHROOTINVOICE_CLONE,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE} from './constants';
 
 import {
     getHashrootInvoiceListSuccess,
@@ -18,10 +19,14 @@ import {
     getHashrootInvoiceUpdateFailed,
     getHashrootInvoiceDeleteSuccess,
     getHashrootInvoiceDeleteFailed,
+    getHashrootCloneInvoiceSuccess,
+    getHashrootCloneInvoiceFailed,
+    downloadInvoiceSuccess,
+    downloadInvoiceFailed,
 } from './actions';
 
 import { getLoggedInUser } from '../../helpers/authUtils';
-
+const hashrootinvoiceCloneSucsess = () => toast.success('Cloned Successfully', { transition: Zoom });
 const hashrootinvoiceAddedSucsess = () => toast.success('HashrootInvoice Added Successfully', { transition: Zoom });
 const hashrootinvoiceDeletedSuccess = () => toast.success('HashrootInvoice Deleted Successfully', { transition: Zoom });
 const hashrootinvoiceUpdated = () => toast.info('HashrootInvoice Updated Successfully', { transition: Zoom });
@@ -201,6 +206,95 @@ function* HashrootInvoiceDelete({ payload: id }) {
         yield put(getHashrootInvoiceDeleteFailed(message));
     }
 }
+// HashrootpCloneInvoice 
+
+function* HashrootCloneInvoice({ payload: data }) {
+    const user = getLoggedInUser();
+    console.log(user);
+    let options = {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + user.data.token,
+        },
+        method: 'POST',
+        url: endpoints.cloneInvoice,
+        data: data,
+    };
+
+    try {
+        const response = yield call(ApiCall, options);
+        if (response.data.status) {
+            hashrootinvoiceCloneSucsess();
+            yield put(getHashrootCloneInvoiceSuccess(response.data));
+        } else {
+            let message;
+            message = response.data.message;
+            WarnFields(message);
+        }
+    } catch (error) {
+        let message;
+        switch (error.response.status) {
+            case 500:
+                message = 'Internal Server Error';
+                WarnFields(message);
+                break;
+            case 401:
+                message = 'Invalid credentials';
+                WarnFields(message);
+                break;
+            case 400:
+                message = error.response.data && error.response.data.error;
+                WarnFields(message);
+                break;
+            default:
+                message = error;
+        }
+        yield put(getHashrootCloneInvoiceFailed(message));
+    }
+}
+
+
+function* invoiceDownload({ payload: data }) {
+    const user = getLoggedInUser();
+    let options = {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + user.data.token,
+        },
+        method: 'GET',
+        url: endpoints.downloadInvoice + '/'+ data.id,
+        // data: sendData
+    };
+
+    try {
+        const response = yield call(ApiCall, options);
+
+        yield put(downloadInvoiceSuccess(response.data));
+    } catch (error) {
+        let message;
+        switch (error.response.status) {
+            case 500:
+                message = 'Internal Server Error';
+                WarnFields(message);
+                break;
+            case 401:
+                message = 'Invalid credentials';
+                WarnFields(message);
+                break;
+            case 400:
+                message = error.response.data && error.response.data.error;
+                WarnFields(message);
+                break;
+            case 404:
+                message = error.response.data && error.response.data.error;
+                WarnFields(message);
+                break;
+            default:
+                message = error;
+        }
+        yield put(downloadInvoiceFailed(message));
+    }
+}
 
 export function* watchHashrootInvoiceList(): any {
     yield takeEvery(HASHROOTINVOICE_LIST, HashrootInvoiceList);
@@ -214,13 +308,19 @@ export function* watchHashrootInvoiceUpdate(): any {
 export function* watchHashrootInvoiceDelete(): any {
     yield takeEvery(HASHROOTINVOICE_DELETE, HashrootInvoiceDelete);
 }
-
+export function* watchHashrootInvoiceClone(): any {
+    yield takeEvery(HASHROOTINVOICE_CLONE, HashrootCloneInvoice);
+}
+export function* watchHashrootInvoiceDownload(): any {
+    yield takeEvery(HASHROOTINVOICE_DOWNLOAD_INVOICE, invoiceDownload);
+}
 function* authSaga(): any {
     yield all([
         fork(watchHashrootInvoiceList),
         fork(watchHashrootInvoiceAdd),
         fork(watchHashrootInvoiceUpdate),
         fork(watchHashrootInvoiceDelete),
+        fork(watchHashrootInvoiceClone),
     ]);
 }
 

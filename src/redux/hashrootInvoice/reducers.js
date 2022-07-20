@@ -11,7 +11,13 @@ import {
     HASHROOTINVOICE_UPDATE_FAILED,
     HASHROOTINVOICE_DELETE,
     HASHROOTINVOICE_DELETE_SUCCESS,
-    HASHROOTINVOICE_DELETE_FAILED
+    HASHROOTINVOICE_DELETE_FAILED,
+    HASHROOTINVOICE_CLONE,
+    HASHROOTINVOICE_CLONE_SUCCESS,
+    HASHROOTINVOICE_CLONE_FAILED,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS,
+    HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED,
 } from './constants';
 
 import { getLoggedInUser } from '../../helpers/authUtils';
@@ -50,8 +56,20 @@ const HashrootInvoice = (state: State = INIT_STATE, action: HashrootInvoiceActio
             return { ...state, hashrootinvoiceDelete: action.payload, loading: false, error: null };
         case HASHROOTINVOICE_DELETE_FAILED:
             return { ...state, error: action.payload, loading: false };
-        default:
+        case HASHROOTINVOICE_CLONE:
+            return { ...state, loading: true };
+        case HASHROOTINVOICE_CLONE_SUCCESS:
+            return { ...state, hashrootCloneinvoice: action.payload, loading: false, error: null };
+        case HASHROOTINVOICE_CLONE_FAILED:
+            return { ...state, error: action.payload };
+        case HASHROOTINVOICE_DOWNLOAD_INVOICE:
             return { ...state };
+        case HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS:
+            return { ...state, downloadInvoice: action.payload, error: null };
+        case HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED:
+            return { ...state, error: action.payload };
+        default:
+                return { ...state };
     }
 };
 
