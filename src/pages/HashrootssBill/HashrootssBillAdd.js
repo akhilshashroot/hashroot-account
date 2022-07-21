@@ -800,7 +800,7 @@ class HashrootBillAddEdit extends React.Component {
                                         )}
 
                                         <Col md={4}>
-                                            <FormGroup style={{ paddingTop: '2em' }}>
+                                            <FormGroup style={{ paddingTop: '0em' }}>
                                                 <Label for="billDate" className="pr-4">
                                                     Bill Date
                                                 </Label>

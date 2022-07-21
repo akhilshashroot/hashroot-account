@@ -434,7 +434,7 @@ class HashrootInvoiceAddEdit extends React.Component {
                             className="modal-dialog-centered"
                             size="xl">
                             <ModalHeader toggle={this.toggleModal} className="modal-colored-header bg-dark">
-                                {data !== null ? 'Edit Hashroot-P Invoice' : 'Add New Hashroot-P Invoice'}
+                                {data !== null ? 'Edit Hashroot-SS Invoice' : 'Add New Hashroot-SS Invoice'}
                             </ModalHeader>
                             <ModalBody>
                                 {/* {this.props.employee && this.props.employee.employeelistloading && this.props.hashrootinvoice && this.props.hashrootinvoice.listloading && <LoaderWidget />} */}
