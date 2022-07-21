@@ -200,8 +200,9 @@ class HashrootBillAddEdit extends React.Component {
             fd.append('bill_void_cgst', this.state.withoutCGST);
             // fd.append('bill_gst_void', this.state.withoutIGST);
             fd.append('bill_void_igst', this.state.withoutIGST);
-
+            console.log(this.state.attachFiles);
             this.props.getHashrootBillAdd(fd);
+            
 
             // let data = {
             //     bill_table_name: 'hashrootp_bills',

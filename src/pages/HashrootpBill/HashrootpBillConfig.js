@@ -7,7 +7,7 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import HashrootBillDetails from './HashrootpBillDetails';
-import HashrootBillAddEdit from '../HashrootsBill/HashrootsBillAdd';
+import HashrootBillAddEdit from '../HashrootpBill/HashrootpBillAdd';
 import HashrootBillDelete from './HashrootpBillDelete';
 import { toast, ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

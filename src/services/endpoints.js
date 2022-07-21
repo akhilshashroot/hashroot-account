@@ -16,6 +16,7 @@ export const endpoints = {
   //Hashroot
   viewHashrootInvoice : `${baseUrl}/api/admin/viewhrtinvoice`,
   addHashrootInvoice : `${baseUrl}/api/admin/add_new_invoice`,
+  hashrootinvoiceUpdate : `${baseUrl}/api/admin/edit_invoice`,
 
   //Hashroot-P
   viewHashrootpInvoice : `${baseUrl}/api/admin/viewhrtpinvoice`,

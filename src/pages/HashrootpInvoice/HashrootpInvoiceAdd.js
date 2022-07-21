@@ -190,6 +190,7 @@ class HashrootInvoiceAddEdit extends React.Component {
                 //     console.log("non-keralite")
                 // }
             };
+            console.log(this.state.state);
             this.props.getHashrootInvoiceAdd(data);
         } else {
             this.props.emptyAllFields();

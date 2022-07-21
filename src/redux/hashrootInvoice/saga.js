@@ -130,14 +130,14 @@ function* HashrootInvoiceAdd({ payload: data }) {
 
 function* HashrootInvoiceUpdate({ payload: data }) {
     const user = getLoggedInUser();
-
+    console.log(endpoints.hashrootinvoiceUpdate);
     let options = {
         headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + user.token,
+            Authorization: 'Bearer ' + user.data.token,
         },
-        method: 'PUT',
-        url: endpoints.hashrootinvoiceUpdate + '/' + (data && data.dep_id),
+        method: 'POST',
+        url: endpoints.hashrootinvoiceUpdate,
         data: data,
     };
 

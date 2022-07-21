@@ -44,7 +44,7 @@ class HashrootInvoiceAddEdit extends React.Component {
         txnId: '',
         country: '',
         currency: '$',
-        hsn: '',
+        hsn: 1,
         invoiceStatus: 'Unpaid',
         // inputFields: [{ description: '', total: '' }],
         description: '',
@@ -65,10 +65,57 @@ class HashrootInvoiceAddEdit extends React.Component {
     };
 
     componentDidMount = () => {
+        
+        
+        this.setState({
+            invoiceNum: this.props?.hashrootinvoice?.hashrootpinvoice?.invo_number_add,
+        });
+console.log(this.props);
         if (this.props.toggleAddEditModal) {
             if (this.props.data !== null) {
+                this.paymentChange(
+                    this.convertPayment(this.props?.payment?.data).filter(
+                        (e) => e.label === this.props.data.payment_method
+                    )[0]
+                );
+                this.countryChange(
+                    this.convertCountry(this.props?.country?.data).filter((e) => e.label === this.props.data.country)[0]
+                );
+                if (this.props.data.origin == 'International') {
+                    this.setState({ clientOrigin: false });
+                } else {
+                    this.setState({ clientOrigin: true });
+                    if (this.props.data.state == 'Kerala') {
+                        this.setState({ state: false });
+                    } else {
+                        this.setState({ state: true });
+                    }
+                }
                 this.setState({
-                    name: this.props.data.dep_name,
+                    clientName: this.props.data.client_name,
+                    clientAddress: this.props.data.address,
+                    invoiceDate: this.props.data.invo_date,
+                    dueDate: this.props.data.due_date,
+                    inputFields: this.props.data.description,
+                    finalAmount: this.props.data.amount,
+                    // quantity: this.props.data.quantity,
+                    paidDate: this.props.data.paid_date,
+                    bankDetails: this.props.data.bank_details,
+                    txnId: this.props.data.transaction_id,
+                    stateIndian: this.props.data.state,
+                    GSTIN: this.props.data.gstin,
+                    invoiceStatus: this.props.data.paid_status,
+                    // declaration: this.props.data?.declaration,
+                    invoiceNum: this.props.data?.invo_number,
+                    IGST: this.props.data?.IGST,
+                    withoutIGST: this.props.data.amount,
+                    CGST: this.props.data?.CGST,
+                    SGST: this.props.data?.SGST,
+                    withoutCGST: this.props.data.amount,
+                    hsn:this.props.data?.hsn?.hsn_id,
+                    description: this.props.data.description,
+                    quantity: this.props.data.quantity
+                    // declaration: '',
                 });
             }
         }
@@ -147,7 +194,32 @@ class HashrootInvoiceAddEdit extends React.Component {
             this.state.finalAmount !== null &&
             this.state.finalAmount !== ''
         ) {
-            let data = {
+            const fd = new FormData();
+            fd.append('table_name', 'hrt_invoice');
+            fd.append('inv_no_hrt', this.state.invoiceNum);
+            fd.append('client_name', this.state.clientName);
+            fd.append('client_addr', this.state.clientAddress);
+            fd.append('invo_date', this.state.invoiceDate);
+            fd.append('due_date', this.state.dueDate);
+            fd.append('description', this.state.description);
+            fd.append('amount', this.state.finalAmount);
+            fd.append('quantity', this.state.quantity);
+            fd.append('paid_date', this.state.paidDate);
+            fd.append('payment_method', this.state.paymentMethod.label);
+            fd.append('hrco', this.state.clientOrigin ? 2 : 1);
+            fd.append('hrt_country', this.state.country?.label);
+            fd.append('hrt_currency', this.state.currency);
+            fd.append('hrt_hsn', this.state.hsn);
+            fd.append('paid_status', this.state.invoiceStatus);
+            fd.append('select_state', this.state.state ? 2 : 1);
+            fd.append('cgst', this.state.CGST);
+             fd.append('sgst', this.state.SGST);
+            fd.append('void_cgst', this.state.withoutCGST);
+            fd.append('igst', this.state.IGST);
+            fd.append('void_igst', this.state.withoutIGST);
+            fd.append('state', this.state.stateIndian);
+            fd.append('invoice_hrt', this.state.attachFile);
+            /*let data = {
                 table_name: 'hrt_invoice',
                 inv_no_hrt: this.state.invoiceNum,
                 client_name: this.state.clientName,
@@ -158,13 +230,13 @@ class HashrootInvoiceAddEdit extends React.Component {
                 amount: this.state.finalAmount,
                 quantity: this.state.quantity,
                 paid_date: this.state.paidDate,
-                payment_method: this.state.paymentMethod,
+                payment_method: this.state.paymentMethod.label,
                 hrco: this.state.clientOrigin ? 2 : 1,
-                hrt_country: this.state.country,
+                hrt_country: this.state.country?.label,
                 hrt_currency: this.state.currency,
                 hrt_hsn: this.state.hsn,
                 paid_status: this.state.invoiceStatus,
-                select_state: this.state.state ? 1 : 2,
+                select_state: this.state.state ? 2 : 1,
                 cgst: this.state.CGST,
                 sgst: this.state.SGST,
                 void_c0gst: this.state.withoutCGST,
@@ -176,19 +248,56 @@ class HashrootInvoiceAddEdit extends React.Component {
 
                 // transaction_id: this.state.txnId,
                 // gstin: '',
-            };
-            console.log(data);
-            this.props.getHashrootInvoiceAdd(data);
+            };*/
+            console.log(this.state.attachFile);
+            this.props.getHashrootInvoiceAdd(fd);
         } else {
             this.props.emptyAllFields();
         }
     }
 
     updateHashrootInvoice = () => {
-        if (this.state.name !== null && this.state.name !== '') {
+        if (
+            this.state.clientName !== null &&
+            this.state.clientName !== '' &&
+            this.state.clientAddress !== null &&
+            this.state.clientAddress !== '' &&
+            this.state.invoiceNum !== null &&
+            this.state.invoiceNum !== '' &&
+            this.state.dueDate !== null &&
+            this.state.dueDate !== '' &&
+            this.state.finalAmount !== null &&
+            this.state.finalAmount !== ''
+        ) {
             let data = {
-                dep_name: this.state.name,
-                dep_id: this.props.data.dep_id,
+                table_name: 'hrt_invoice',
+                invo_id: this.props.data.invoice_id,
+                invo_date: this.state.invoiceDate,
+                due_date: this.state.dueDate,
+                paid_date: this.state.paidDate,
+                client_name: this.state.clientName,
+                client_addr: this.state.clientAddress,
+                // quantity: this.state.quantity,
+                paid_status: this.state.invoiceStatus,
+                payment_method: this.state.paymentMethod?.label,
+                //bank_details: this.state.bankDetails,
+                cgst: this.state.CGST,
+                sgst: this.state.SGST,
+                void_cgst: this.state.withoutCGST,
+                igst: this.state.IGST,
+                void_igst: this.state.withoutIGST,
+                inv_no_hrt: this.state.invoiceNum,
+                hrt_hsn: this.state.hsn,
+                description: this.state.inputFields,
+                hrt_country: this.state.country?.label,
+                select_state: this.state.state ? 2 : 1,
+                state: this.state.stateIndian,
+                hrco: this.state.clientOrigin ? 2 : 1,
+                amount: this.state.finalAmount,
+                hrt_currency: this.state.currency,
+                transaction_id: this.state.txnId,
+                gstin: this.state.GSTIN,
+                // declaration: this.state.declaration,
             };
             this.props.getHashrootInvoiceUpdate(data);
         } else {
@@ -222,6 +331,16 @@ class HashrootInvoiceAddEdit extends React.Component {
             let amt = value;
             this.setState({ IGST: (amt - amt / 1.18).toFixed(2), withoutIGST: (amt / 1.18).toFixed(2) });
         }
+    };
+    paymentChange = (e) => {
+        this.setState({
+            paymentMethod: e,
+        });
+    };
+    countryChange = (e) => {
+        this.setState({
+            country: e,
+        });
     };
 
     clientOriginChange = (e) => {
@@ -266,13 +385,18 @@ class HashrootInvoiceAddEdit extends React.Component {
         this.setState({ IGST: (amt - amt / 1.18).toFixed(2), withoutIGST: (amt / 1.18).toFixed(2) });
     };
 
-    changeHandler = (event) => {
+    /*changeHandler = (event) => {
+        this.setState({ attachFile: event.target.files[0] });
+    };*/
+    onFileChange = (event) => {
+        // Update the state
         this.setState({ attachFile: event.target.files[0] });
     };
 
     render() {
         const { invoiceNum, clientOrigin } = this.state;
         const { data } = this.props;
+        console.log(this.state.paidDate)
         return (
             <React.Fragment>
                 <Card className="dept-details-card">
@@ -428,32 +552,44 @@ class HashrootInvoiceAddEdit extends React.Component {
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup>
+                                            <div className="d-flex justify-content-around align-items-baseline">
                                                 <Label for="exampleDate">Paid Date</Label>
-                                                <Input
+                                               {/*<Input
                                                     type="date"
                                                     name="date"
                                                     id="exampleDate"
                                                     placeholder="Select Date"
                                                     value={this.state.paidDate}
                                                     onChange={(e) => {
-                                                        this.setState({ paidDate: e.target.value });
+                                                        this.setState({ paidDate: e.toLocaleDateString('en-US') });
                                                     }}
-                                                />
+                                                />*/}
+                                                <DatePicker
+                                                        className="form-control"
+                                                        type="date"
+                                                        name="date"
+                                                        id="exampleDate"
+                                                        placeholder="Paid Date"
+                                                        value={this.state.paidDate}
+                                                        onChange={(e) => {
+                                                            this.setState({ paidDate: e.toLocaleDateString('en-US') });
+                                                        }}
+                                                    />
+                                                </div>
                                             </FormGroup>
                                         </Col>
 
                                         <Col md={6}>
                                             <FormGroup>
                                                 <Label for="team">Payment Method</Label>
-
                                                 <Select
                                                     label="team"
                                                     className="react-select mb-3"
                                                     classNamePrefix="react-select"
-                                                    options={this.convertPayment(this.props?.payment?.data)}
-                                                    onChange={(e) => {
-                                                        this.setState({ paymentMethod: e.label });
-                                                    }}></Select>
+                                                    defaultValue={this.state.paymentMethod || ''}
+                                                    onChange={(e) => this.paymentChange(e)}
+                                                    options={this.convertPayment(this.props?.payment?.data)}></Select>
+                                                
                                             </FormGroup>
                                         </Col>
                                         {/* <Col md={6}>
@@ -537,9 +673,10 @@ class HashrootInvoiceAddEdit extends React.Component {
                                                         label="team"
                                                         className="react-select mb-3"
                                                         classNamePrefix="react-select"
+                                                        defaultValue={this.state.country}
                                                         options={this.convertCountry(this.props?.country?.data)}
                                                         onChange={(e) => {
-                                                            this.setState({ country: e.label });
+                                                            this.countryChange(e);
                                                         }}></Select>
                                                 </FormGroup>
                                             </Col>
@@ -651,29 +788,73 @@ class HashrootInvoiceAddEdit extends React.Component {
                                         <Col md={6}>
                                             <FormGroup>
                                                 <Label for="team">Select HSN</Label>
-
-                                                <Select
+                                                <Input
+                                                    type="select"
+                                                    name="select"
+                                                    id="exampleSelect"
+                                                    value={this.state.hsn}
+                                                    onChange={(e) => {
+                                                        this.setState({ hsn: e.target.value });
+                                                    }}>
+                                                    <option value="1">
+                                                        998313 : IT Consulting &amp; Support Services
+                                                    </option>
+                                                    <option value="2">998314 : IT Design and Development</option>
+                                                    <option value="3">
+                                                        998315 : Hosting and Infrastructure Provisioning Service
+                                                    </option>
+                                                    <option value="4">
+                                                        998316 : IT Infrastructure &amp; Network Management
+                                                    </option>
+                                                    <option value="5">998319 : Other IT services</option>
+                                                    <option value="6">
+                                                        9992 : Other education &amp; training services
+                                                    </option>
+                                                </Input>
+                                                {/*<Select
                                                     label="team"
                                                     className="react-select mb-3"
                                                     classNamePrefix="react-select"
                                                     options={this.convertHSN(this.props?.hsn?.data)}
-                                                    onChange={(e) => this.setState({ hsn: e.value })}></Select>
+                                                onChange={(e) => this.setState({ hsn: e.value })}></Select>*/}
                                             </FormGroup>
                                         </Col>
-                                        <Col md={6} className="pt-2">
+                                        {/*<Col md={6} className="pt-2">
                                             <label htmlFor="attach">Attach Files</label> <br />
                                             <input type="file" id="attach" onChange={(e) => this.changeHandler(e)} />
-                                        </Col>
+                                            </Col>*/}
+                                            {data !== null ? (
+                                            <Col md={12}>
+                                                <Label for="myfile">Update Files</Label>
+                                                <Input
+                                                    type="file"
+                                                    id="myfile"
+                                                    name="myfile"
+                                                    onChange={(e) => this.onFileChange(e)}
+                                                />
+                                            </Col>
+                                        ) : (
+                                            <Col md={12}>
+                                                <Label for="myfile">Attach Files</Label>
+                                                <Input
+                                                    type="file"
+                                                    id="myfile"
+                                                    name="myfile"
+                                                    onChange={(e) => this.onFileChange(e)}
+                                                />
+                                            </Col>
+                                        )}
                                         <Col md={12}>
                                             <FormGroup>
                                                 <Label for="exampleCheckbox" className="text-center">
                                                     Invoice Status
                                                 </Label>
                                                 <div className="d-flex justify-content-around">
-                                                    <CustomInput
+                                                <CustomInput
                                                         type="radio"
                                                         id="Paid"
                                                         label="Paid"
+                                                        checked={this.state.invoiceStatus == 'Paid'}
                                                         name="invoice"
                                                         onChange={(e) => this.setState({ invoiceStatus: e.target.id })}
                                                     />
@@ -682,7 +863,7 @@ class HashrootInvoiceAddEdit extends React.Component {
                                                         id="Unpaid"
                                                         label="Unpaid"
                                                         name="invoice"
-                                                        defaultChecked
+                                                        checked={this.state.invoiceStatus == 'Unpaid'}
                                                         onChange={(e) => this.setState({ invoiceStatus: e.target.id })}
                                                     />
                                                     <CustomInput
@@ -690,6 +871,7 @@ class HashrootInvoiceAddEdit extends React.Component {
                                                         id="Cancelled"
                                                         label="Cancelled"
                                                         name="invoice"
+                                                        checked={this.state.invoiceStatus == 'Cancelled'}
                                                         onChange={(e) => this.setState({ invoiceStatus: e.target.id })}
                                                     />
                                                     <CustomInput
@@ -697,6 +879,7 @@ class HashrootInvoiceAddEdit extends React.Component {
                                                         id="Refunded"
                                                         label="Refunded"
                                                         name="invoice"
+                                                        checked={this.state.invoiceStatus == 'Refunded'}
                                                         onChange={(e) => this.setState({ invoiceStatus: e.target.id })}
                                                     />
                                                 </div>
