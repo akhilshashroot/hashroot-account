@@ -13,6 +13,7 @@ import {
     Label,
     Input,
     CustomInput,
+    UncontrolledTooltip,
 } from 'reactstrap';
 import './style.scss';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
@@ -58,6 +59,7 @@ class HashrootInvoiceAddEdit extends React.Component {
         CGST: '',
         SGST: '',
         withoutCGST: '',
+        updateAttachFile: '',
     };
 
     toggleModal = () => {
@@ -70,7 +72,7 @@ class HashrootInvoiceAddEdit extends React.Component {
         this.setState({
             invoiceNum: this.props?.hashrootinvoice?.hashrootpinvoice?.invo_number_add,
         });
-console.log(this.props);
+console.log(this.props.data);
         if (this.props.toggleAddEditModal) {
             if (this.props.data !== null) {
                 this.paymentChange(
@@ -114,7 +116,8 @@ console.log(this.props);
                     withoutCGST: this.props.data.amount,
                     hsn:this.props.data?.hsn?.hsn_id,
                     description: this.props.data.description,
-                    quantity: this.props.data.quantity
+                    quantity: this.props.data.quantity,
+                    updateAttachFile: this.props.data.inv_uploaded
                     // declaration: '',
                 });
             }
@@ -391,6 +394,10 @@ console.log(this.props);
     onFileChange = (event) => {
         // Update the state
         this.setState({ attachFile: event.target.files[0] });
+    };
+
+    downloadBill = () => {
+        window.open(this.state.updateAttachFile, '_blank');
     };
 
     render() {
@@ -843,6 +850,18 @@ console.log(this.props);
                                                     onChange={(e) => this.onFileChange(e)}
                                                 />
                                             </Col>
+                                        )}
+                                        {data !== null && (
+                                            <div>
+                                                <i
+                                                    className="uil  uil-file-download widget-icon ml-2 bg-success-lighten text-success"
+                                                    title="Download"
+                                                    onClick={() => this.downloadBill()}
+                                                    id="download"></i>
+                                                <UncontrolledTooltip placement="top" target="download">
+                                                    Download
+                                                </UncontrolledTooltip>
+                                            </div>
                                         )}
                                         <Col md={12}>
                                             <FormGroup>
