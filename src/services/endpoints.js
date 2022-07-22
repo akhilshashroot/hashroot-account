@@ -15,8 +15,8 @@ export const endpoints = {
   resetPassword: `${baseUrl}/api/reset-password`,
   //Hashroot
   viewHashrootInvoice : `${baseUrl}/api/admin/viewhrtinvoice`,
-  addHashrootInvoice : `${baseUrl}/api/admin/add_new_invoice`,
-  hashrootinvoiceUpdate : `${baseUrl}/api/admin/edit_invoice`,
+  addHashrootInvoice : `${baseUrl}/api/admin/add_new_invoice_hashroot`,
+  hashrootinvoiceUpdate : `${baseUrl}/api/admin/edit_invoice_hashroot`,
 
   //Hashroot-P
   viewHashrootpInvoice : `${baseUrl}/api/admin/viewhrtpinvoice`,
