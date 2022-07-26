@@ -55,7 +55,7 @@ class HashrootBillAddEdit extends React.Component {
         hsn: '',
         invoiceStatus: 'Unpaid',
         inputFields: '',
-        GST: 18,
+        GST: 0,
 
         //Indian
         keralite: '',
