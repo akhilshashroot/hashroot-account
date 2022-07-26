@@ -62,12 +62,12 @@ const HashrootInvoice = (state: State = INIT_STATE, action: HashrootInvoiceActio
             return { ...state, hashrootCloneinvoice: action.payload, loading: false, error: null };
         case HASHROOTINVOICE_CLONE_FAILED:
             return { ...state, error: action.payload };
-        case HASHROOTINVOICE_DOWNLOAD_INVOICE:
-            return { ...state };
-        case HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS:
-            return { ...state, downloadInvoice: action.payload, error: null };
-        case HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED:
-            return { ...state, error: action.payload };
+        // case HASHROOTINVOICE_DOWNLOAD_INVOICE:
+        //     return { ...state };
+        // case HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS:
+        //     return { ...state, downloadInvoice: action.payload, error: null };
+        // case HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED:
+        //     return { ...state, error: action.payload };
         default:
                 return { ...state };
     }
