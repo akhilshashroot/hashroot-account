@@ -97,17 +97,17 @@ export const getHashrootCloneInvoiceFailed = (error: string): HashrootInvoiceAct
 });
 
 
-export const downloadInvoice = (data): HashrootInvoiceAction => ({
-    type: HASHROOTINVOICE_DOWNLOAD_INVOICE,
-    payload: data,
-});
+// export const downloadInvoice = (data): HashrootInvoiceAction => ({
+//     type: HASHROOTINVOICE_DOWNLOAD_INVOICE,
+//     payload: data,
+// });
 
-export const downloadInvoiceSuccess = (downloadInvoice: string): HashrootInvoiceAction => ({
-    type: HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS,
-    payload: downloadInvoice,
-});
+// export const downloadInvoiceSuccess = (downloadInvoice: string): HashrootInvoiceAction => ({
+//     type: HASHROOTINVOICE_DOWNLOAD_INVOICE_SUCCESS,
+//     payload: downloadInvoice,
+// });
 
-export const downloadInvoiceFailed = (error: string): HashrootInvoiceAction => ({
-    type: HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED,
-    payload: error,
-});
+// export const downloadInvoiceFailed = (error: string): HashrootInvoiceAction => ({
+//     type: HASHROOTINVOICE_DOWNLOAD_INVOICE_FAILED,
+//     payload: error,
+// });

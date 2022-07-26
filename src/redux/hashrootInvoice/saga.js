@@ -8,7 +8,7 @@ import { endpoints } from '../../services/endpoints';
 import { toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HASHROOTINVOICE_LIST, HASHROOTINVOICE_ADD, HASHROOTINVOICE_UPDATE, HASHROOTINVOICE_DELETE,HASHROOTINVOICE_CLONE,
-    HASHROOTINVOICE_DOWNLOAD_INVOICE} from './constants';
+   } from './constants';
 
 import {
     getHashrootInvoiceListSuccess,
@@ -21,8 +21,8 @@ import {
     getHashrootInvoiceDeleteFailed,
     getHashrootCloneInvoiceSuccess,
     getHashrootCloneInvoiceFailed,
-    downloadInvoiceSuccess,
-    downloadInvoiceFailed,
+    // downloadInvoiceSuccess,
+    // downloadInvoiceFailed,
 } from './actions';
 
 import { getLoggedInUser } from '../../helpers/authUtils';
@@ -89,7 +89,7 @@ function* HashrootInvoiceAdd({ payload: data }) {
             Authorization: 'Bearer ' + user.data.token,
         },
         method: 'POST',
-        url: endpoints.addHashrootInvoice,
+        url: endpoints.addHashrootnormalInvoice,
         data: data,
     };
 
@@ -254,47 +254,47 @@ function* HashrootCloneInvoice({ payload: data }) {
 }
 
 
-function* invoiceDownload({ payload: data }) {
-    const user = getLoggedInUser();
-    let options = {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + user.data.token,
-        },
-        method: 'GET',
-        url: endpoints.downloadInvoice + '/'+ data.id,
-        // data: sendData
-    };
+// function* invoiceDownload({ payload: data }) {
+//     const user = getLoggedInUser();
+//     let options = {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             Authorization: 'Bearer ' + user.data.token,
+//         },
+//         method: 'GET',
+//         url: endpoints.downloadInvoice + '/'+ data.id,
+//         // data: sendData
+//     };
 
-    try {
-        const response = yield call(ApiCall, options);
+//     try {
+//         const response = yield call(ApiCall, options);
 
-        yield put(downloadInvoiceSuccess(response.data));
-    } catch (error) {
-        let message;
-        switch (error.response.status) {
-            case 500:
-                message = 'Internal Server Error';
-                WarnFields(message);
-                break;
-            case 401:
-                message = 'Invalid credentials';
-                WarnFields(message);
-                break;
-            case 400:
-                message = error.response.data && error.response.data.error;
-                WarnFields(message);
-                break;
-            case 404:
-                message = error.response.data && error.response.data.error;
-                WarnFields(message);
-                break;
-            default:
-                message = error;
-        }
-        yield put(downloadInvoiceFailed(message));
-    }
-}
+//         yield put(downloadInvoiceSuccess(response.data));
+//     } catch (error) {
+//         let message;
+//         switch (error.response.status) {
+//             case 500:
+//                 message = 'Internal Server Error';
+//                 WarnFields(message);
+//                 break;
+//             case 401:
+//                 message = 'Invalid credentials';
+//                 WarnFields(message);
+//                 break;
+//             case 400:
+//                 message = error.response.data && error.response.data.error;
+//                 WarnFields(message);
+//                 break;
+//             case 404:
+//                 message = error.response.data && error.response.data.error;
+//                 WarnFields(message);
+//                 break;
+//             default:
+//                 message = error;
+//         }
+//         yield put(downloadInvoiceFailed(message));
+//     }
+// }
 
 export function* watchHashrootInvoiceList(): any {
     yield takeEvery(HASHROOTINVOICE_LIST, HashrootInvoiceList);
@@ -311,9 +311,9 @@ export function* watchHashrootInvoiceDelete(): any {
 export function* watchHashrootInvoiceClone(): any {
     yield takeEvery(HASHROOTINVOICE_CLONE, HashrootCloneInvoice);
 }
-export function* watchHashrootInvoiceDownload(): any {
-    yield takeEvery(HASHROOTINVOICE_DOWNLOAD_INVOICE, invoiceDownload);
-}
+// export function* watchHashrootInvoiceDownload(): any {
+//     yield takeEvery(HASHROOTINVOICE_DOWNLOAD_INVOICE, invoiceDownload);
+// }
 function* authSaga(): any {
     yield all([
         fork(watchHashrootInvoiceList),
