@@ -426,7 +426,7 @@ console.log(this.props.data);
                                             <AvField
                                                 name="dept-name"
                                                 label="Invoice Number"
-                                                type="number"
+                                                type="text"
                                                 value={invoiceNum || ''}
                                                 onChange={(e) => {
                                                     this.setState({ invoiceNum: e.target.value });
