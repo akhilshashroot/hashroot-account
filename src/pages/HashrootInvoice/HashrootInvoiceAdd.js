@@ -280,7 +280,7 @@ console.log(this.props.data);
                 paid_date: this.state.paidDate,
                 client_name: this.state.clientName,
                 client_addr: this.state.clientAddress,
-                // quantity: this.state.quantity,
+                quantity: this.state.quantity,
                 paid_status: this.state.invoiceStatus,
                 payment_method: this.state.paymentMethod?.label,
                 //bank_details: this.state.bankDetails,
