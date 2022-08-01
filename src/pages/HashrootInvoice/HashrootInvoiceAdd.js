@@ -59,6 +59,7 @@ class HashrootInvoiceAddEdit extends React.Component {
         CGST: '',
         SGST: '',
         withoutCGST: '',
+        withoutCGSTnew: '',
         updateAttachFile: '',
     };
 
@@ -113,7 +114,8 @@ console.log(this.props.data);
                     withoutIGST: this.props.data.amount,
                     CGST: this.props.data?.CGST,
                     SGST: this.props.data?.SGST,
-                    withoutCGST: this.props.data.amount,
+                    withoutCGST: this.props.data.gstvoid,
+                    //withoutCGSTnew:this.props.data.gstvoid,
                     hsn:this.props.data?.hsn?.hsn_id,
                     description: this.props.data.description,
                     quantity: this.props.data.quantity,

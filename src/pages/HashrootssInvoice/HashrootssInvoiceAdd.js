@@ -60,6 +60,7 @@ class HashrootInvoiceAddEdit extends React.Component {
         CGST: '',
         SGST: '',
         withoutCGST: '',
+        withoutCGSTnew: '',
         // declaration: '',
         GSTIN: '',
     };
@@ -117,7 +118,8 @@ class HashrootInvoiceAddEdit extends React.Component {
                     withoutIGST: this.props.data.amount,
                     CGST: this.props.data?.CGST,
                     SGST: this.props.data?.SGST,
-                    withoutCGST: this.props.data.amount,
+                    withoutCGST: this.props.data.amount-this.props.data.gst,
+                    //withoutCGSTnew:this.props.data.amount-this.props.data.gst,
                     hsn: this.props.data?.hsn?.hsn_id,
                     // declaration: '',
                 });
@@ -952,11 +954,11 @@ class HashrootInvoiceAddEdit extends React.Component {
                                 </Button>{' '}
                                 {data !== null ? (
                                     <Button color="success" onClick={() => this.updateHashrootInvoice()}>
-                                        Update Hashroot-P Invoice
+                                        Update Hashroot-SS Invoice
                                     </Button>
                                 ) : (
                                     <Button color="success" onClick={() => this.addHashrootInvoice()}>
-                                        Add Hashroot-P Invoice
+                                        Add Hashroot-SS Invoice
                                     </Button>
                                 )}
                             </ModalFooter>
